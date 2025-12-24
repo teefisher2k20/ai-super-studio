@@ -1,0 +1,136 @@
+.notification-container {
+  position: fixed;
+  top: 80px;
+  right: 2rem;
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 400px;
+}
+
+.notification-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+  animation: slideDown 0.3s ease;
+}
+
+.notification-toast.success {
+  border-left: 4px solid var(--success);
+}
+
+.notification-toast.success .toast-icon {
+  color: var(--success);
+}
+
+.notification-toast.error {
+  border-left: 4px solid var(--accent);
+}
+
+.notification-toast.error .toast-icon {
+  color: var(--accent);
+}
+
+.notification-toast.info {
+  border-left: 4px solid var(--primary);
+}
+
+.notification-toast.info .toast-icon {
+  color: var(--primary);
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.toast-message {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.toast-close:hover {
+  color: var(--text-primary);
+}
+
+/* Mode Indicator */
+.mode-indicator {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 50;
+}
+
+.mode-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.mode-indicator.online .mode-dot {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+
+.mode-indicator.sandbox .mode-dot {
+  background: var(--warning);
+  box-shadow: 0 0 8px var(--warning);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@media (max-width: 768px) {
+  .notification-container {
+    top: 70px;
+    right: 1rem;
+    left: 1rem;
+    max-width: none;
+  }
+  
+  .mode-indicator {
+    bottom: 1rem;
+    right: 1rem;
+  }
+}

@@ -1,0 +1,20 @@
+flask>=3.0.0
+flask-cors>=4.0.0
+elevenlabs>=0.2.27
+python-dotenv>=1.0.0
+pillow>=10.1.0
+numpy>=1.24.0
+opencv-python>=4.8.0
+torch
+torchaudio
+transformers>=4.36.0
+# TTS and others might be harder to install directly via pip on windows without other deps
+# We will unpin them to let pip resolve best match
+# TTS 
+# piper-tts
+# bark
+openai-whisper
+scipy
+librosa
+soundfile
+requests
