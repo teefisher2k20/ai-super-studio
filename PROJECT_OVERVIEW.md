@@ -1,6 +1,6 @@
 # AI Super Studio - Complete Project Overview
 
-## 🎯 Project Location
+## 🎯 Project Location: `C:\Users\Terrance\.gemini\antigravity\scratch\ai-super-studio`
 
 ```
 C:\Users\Terrance\.gemini\antigravity\scratch\ai-super-studio
