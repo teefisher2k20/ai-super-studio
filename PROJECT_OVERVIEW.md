@@ -2,7 +2,7 @@
 
 ## 🎯 Project Location: `C:\Users\Terrance\.gemini\antigravity\scratch\ai-super-studio`
 
-```
+```text
 C:\Users\Terrance\.gemini\antigravity\scratch\ai-super-studio
 ```
 
@@ -18,7 +18,7 @@ C:\Users\Terrance\.gemini\antigravity\scratch\ai-super-studio
 
 ## 🏗️ Complete Project Structure
 
-```
+```text
 ai-super-studio/
 │
 ├── 📄 README.md                      # Main project overview
