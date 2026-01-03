@@ -1,9 +1,10 @@
 import os
-import sys
+
 
 class AgentService:
     """Service for Conversational AI Agents"""
-    
+
+
     def __init__(self):
         self.agents = {}
         
@@ -36,9 +37,13 @@ class AgentService:
         # response = openai.ChatCompletion.create(...)
         
         # For this demo, let's simulate a "Helpful AI" response
-        response_text = self._simulate_llm_response(user_message, agent['system_prompt'])
+        response_text = self._simulate_llm_response(
+            user_message, agent['system_prompt']
+        )
         
-        agent['history'].append({'role': 'assistant', 'content': response_text})
+        agent['history'].append(
+            {'role': 'assistant', 'content': response_text}
+        )
         
         return {
             'response': response_text,
@@ -57,4 +62,5 @@ class AgentService:
         else:
             return f"That's interesting! Tell me more about '{message}'."
             
+
 agent_service = AgentService()

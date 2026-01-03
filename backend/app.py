@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
@@ -32,6 +32,7 @@ os.makedirs(app.config['OUTPUT_FOLDER'], exist_ok=True)
 # VOICE ENDPOINTS
 # ============================================================================
 
+
 @app.route('/api/voice/generate', methods=['POST'])
 def generate_speech():
     """Generate speech from text"""
@@ -41,18 +42,24 @@ def generate_speech():
         voice = data.get('voice')
         model = data.get('model', 'eleven_multilingual_v2')
         api_key = request.headers.get('X-API-Key')
-        
+
         if not text:
             return jsonify({'error': 'Text is required'}), 400
-        
+
         # Determine mode based on model
-        mode = 'sandbox' if model in ['coqui_xtts', 'piper', 'bark'] else 'online'
-        
-        result = voice_service.generate_speech(text, voice, model, api_key, mode)
+        mode = 'sandbox' if model in [
+            'coqui_xtts', 'piper', 'bark'
+        ] else 'online'
+
+        result = voice_service.generate_speech(
+            text, voice, model, api_key, mode
+        )
         return jsonify(result)
-    
+
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/api/voice/list', methods=['GET'])
 def list_voices():
@@ -64,30 +71,34 @@ def list_voices():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/api/voice/clone', methods=['POST'])
 def clone_voice():
     """Clone a voice from audio samples"""
     try:
         files = request.files
         api_key = request.headers.get('X-API-Key')
-        
+
+
         audio_files = []
         for key in files:
             if key.startswith('sample_'):
                 audio_files.append(files[key])
-        
+
+
         if len(audio_files) < 2:
             return jsonify({'error': 'At least 2 audio samples required'}), 400
-        
+
         result = voice_service.clone_voice(audio_files, api_key)
         return jsonify(result)
-    
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 # ============================================================================
 # VIDEO ENDPOINTS
 # ============================================================================
+
 
 @app.route('/api/video/generate', methods=['POST'])
 def generate_video():
@@ -106,6 +117,7 @@ def generate_video():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/api/video/talking-photo', methods=['POST'])
 def generate_talking_photo():
     """Generate talking photo from image and audio/text"""
@@ -123,6 +135,7 @@ def generate_talking_photo():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/api/video/multi-avatar', methods=['POST'])
 def generate_multi_avatar():
     """Generate multi-avatar conversation"""
@@ -138,6 +151,7 @@ def generate_multi_avatar():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/api/video/style-transfer', methods=['POST'])
 def apply_style_transfer():
@@ -157,6 +171,7 @@ def apply_style_transfer():
 # MODEL MANAGEMENT ENDPOINTS
 # ============================================================================
 
+
 @app.route('/api/models/available', methods=['GET'])
 def get_available_models():
     """Get list of available models for download"""
@@ -166,6 +181,7 @@ def get_available_models():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/api/models/installed', methods=['GET'])
 def get_installed_models():
     """Get list of installed models"""
@@ -174,6 +190,7 @@ def get_installed_models():
         return jsonify(models)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/api/models/download', methods=['POST'])
 def download_model():
@@ -191,6 +208,7 @@ def download_model():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/api/models/<model_id>', methods=['DELETE'])
 def delete_model(model_id):
     """Delete an installed model"""
@@ -199,6 +217,7 @@ def delete_model(model_id):
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/api/models/download-status/<job_id>', methods=['GET'])
 def get_download_status(job_id):
@@ -213,12 +232,13 @@ def get_download_status(job_id):
 # TRANSLATION ENDPOINTS
 # ============================================================================
 
+
 @app.route('/api/translation/global', methods=['POST'])
 def translate_video():
     """Translate video to multiple languages"""
     try:
         data = request.json
-        video_id = data.get('videoId')
+        # video_id = data.get('videoId')
         target_languages = data.get('targetLanguages', [])
         
         # Placeholder for global translation
@@ -236,7 +256,7 @@ def transform_accent():
     """Transform audio to different accent"""
     try:
         data = request.json
-        audio_id = data.get('audioId')
+        # audio_id = data.get('audioId')
         target_accent = data.get('targetAccent')
         
         # Placeholder for accent transformation
@@ -253,6 +273,7 @@ def transform_accent():
 # CONVERSATIONAL AI ENDPOINTS
 # ============================================================================
 
+
 @app.route('/api/conversational/agent/create', methods=['POST'])
 def create_agent():
     """Create a new conversational AI agent"""
@@ -268,6 +289,7 @@ def create_agent():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/api/conversational/agent/test', methods=['POST'])
 def test_agent():
     """Test agent with a message"""
@@ -277,7 +299,7 @@ def test_agent():
         message = data.get('message')
         
         if not agent_id or not message:
-             return jsonify({'error': 'Missing agentId or message'}), 400
+            return jsonify({'error': 'Missing agentId or message'}), 400
              
         result = agent_service.chat(agent_id, message)
         return jsonify(result)
@@ -288,6 +310,7 @@ def test_agent():
 # ============================================================================
 # HEALTH CHECK
 # ============================================================================
+
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
@@ -306,13 +329,16 @@ def health_check():
 # ERROR HANDLERS
 # ============================================================================
 
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({'error': 'Endpoint not found'}), 404
 
+
 @app.errorhandler(500)
 def internal_error(error):
     return jsonify({'error': 'Internal server error'}), 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

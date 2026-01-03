@@ -4,6 +4,7 @@ import threading
 import time
 from utils.downloader import Downloader
 
+
 class ModelManager:
     """Service for managing open-source models"""
     
@@ -99,29 +100,39 @@ class ModelManager:
             if model_id == 'wav2lip':
                 update_progress(20)
                 # 1. Clone Repo
-                if Downloader.git_clone("https://github.com/Rudrabha/Wav2Lip.git", target_dir):
+                if Downloader.git_clone(
+                    "https://github.com/Rudrabha/Wav2Lip.git", target_dir
+                ):
                     update_progress(50)
                     # 2. Download Model Weights (Wav2Lip + GAN) using a public mirror or placeholder
                     # Note: Original GDrive links often require auth, using a placeholder check for now
                     # Users usually have to download these manually or we provide a direct link mirror
-                    print("Wav2Lip repo cloned. Note: Weights require manual download or direct link.")
+                    print(
+                        "Wav2Lip repo cloned. Note: Weights require manual download or direct link."
+                    )
                     success = True
                     
             elif model_id == 'sadtalker':
                 update_progress(20)
-                if Downloader.git_clone("https://github.com/OpenTalker/SadTalker.git", target_dir):
+                if Downloader.git_clone(
+                    "https://github.com/OpenTalker/SadTalker.git", target_dir
+                ):
                     success = True
             
             elif model_id == 'gfpgan':
                 update_progress(20)
-                if Downloader.git_clone("https://github.com/TencentARC/GFPGAN.git", target_dir):
+                if Downloader.git_clone(
+                    "https://github.com/TencentARC/GFPGAN.git", target_dir
+                ):
                     success = True
             
             else:
                 # Generic Repo Clone for unknown models
                 # Attempt to find source from available models
                 avail = self.get_available_models()['models']
-                source = next((m['source'] for m in avail if m['id'] == model_id), None)
+                source = next(
+                    (m['source'] for m in avail if m['id'] == model_id), None
+                )
                 if source:
                     if Downloader.git_clone(source, target_dir):
                         success = True
@@ -129,13 +140,17 @@ class ModelManager:
             if success:
                 self._update_job_status(job_id, model_id, 'completed', 100)
             else:
-                self._update_job_status(job_id, model_id, 'failed', 0, "Download failed")
+                self._update_job_status(
+                    job_id, model_id, 'failed', 0, "Download failed"
+                )
 
         except Exception as e:
             print(f"Download thread error: {e}")
             self._update_job_status(job_id, model_id, 'failed', 0, str(e))
 
-    def _update_job_status(self, job_id, model_id, status, progress, error=None):
+    def _update_job_status(
+        self, job_id, model_id, status, progress, error=None
+    ):
         """Helper to update JSON status file"""
         try:
             data = {}
@@ -143,7 +158,7 @@ class ModelManager:
                 try:
                     with open(self.downloads_file, 'r') as f:
                         data = json.load(f)
-                except:
+                except Exception:
                     pass
             
             data[job_id] = {

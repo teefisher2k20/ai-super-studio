@@ -1,14 +1,13 @@
 import os
 import sys
-import time
 import subprocess
+from utils.downloader import Downloader
 
 # Add backend directory to path so we can import utils
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from utils.downloader import Downloader
-
 MODELS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
+
 
 def print_header():
     print("="*60)
@@ -17,13 +16,16 @@ def print_header():
     print(f"Target Directory: {MODELS_DIR}")
     print("="*60)
 
+
 def download_wav2lip():
     print("\n[1/3] Setting up Wav2Lip...")
     target = os.path.join(MODELS_DIR, 'wav2lip')
     
     if not os.path.exists(target):
         print("Cloning repository...")
-        if Downloader.git_clone("https://github.com/Rudrabha/Wav2Lip.git", target):
+        if Downloader.git_clone(
+            "https://github.com/Rudrabha/Wav2Lip.git", target
+        ):
             print("✅ Repository cloned")
             
             # Relax requirements to avoid conflicts
@@ -42,7 +44,9 @@ def download_wav2lip():
             
             print("Installing requirements (this may take a moment)...")
             try:
-                subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", req_file])
+                subprocess.check_call(
+                    [sys.executable, "-m", "pip", "install", "-r", req_file]
+                )
                 print("✅ Requirements installed")
             except subprocess.CalledProcessError:
                  print("⚠️ Warning: Some requirements failed to install. You may need to install them manually.")
@@ -59,16 +63,21 @@ def download_sadtalker():
     
     if not os.path.exists(target):
         print("Cloning repository...")
-        if Downloader.git_clone("https://github.com/OpenTalker/SadTalker.git", target):
+        if Downloader.git_clone(
+            "https://github.com/OpenTalker/SadTalker.git", target
+        ):
             print("✅ Repository cloned")
             
             # Note: SadTalker requirements are heavy, we skip auto-install to avoid conflicts
             print("ℹ️  Note: SadTalker requires additional valid checkpoint downloads.")
-            print("    Please check backend/models/sadtalker/README.md for weight links.")
+            print(
+                "    Please check backend/models/sadtalker/README.md for weight links."
+            )
         else:
             print("❌ Failed to clone repository")
     else:
         print("✅ SadTalker already exists")
+
 
 def download_coqui():
     print("\n[3/3] Setting up Coqui TTS...")
@@ -76,6 +85,8 @@ def download_coqui():
     try:
         import TTS
         print("✅ Coqui TTS package found")
+        # Silence unused import warning for now
+        _ = TTS
     except ImportError:
         print("Installing Coqui TTS package...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", "TTS"])
@@ -91,7 +102,7 @@ def main():
     # Check for git
     try:
         subprocess.check_call(['git', '--version'], stdout=subprocess.DEVNULL)
-    except:
+    except Exception:
         print("❌ Error: Git is not installed or not in PATH.")
         print("Please install Git to continue.")
         return
@@ -122,6 +133,9 @@ def main():
             break
         else:
             print("Invalid choice")
+
+
+
 
 if __name__ == "__main__":
     main()
